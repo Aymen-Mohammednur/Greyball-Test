@@ -15,6 +15,7 @@ import { FightEntity } from '../../infrastructure/database/fight.entity';
 import { FightParticipantEntity } from '../../infrastructure/database/fight-participant.entity';
 import { removeUndefinedKeys } from '../../shared/utils';
 import { FighterEntity } from 'src/infrastructure/database/fighter.entity';
+import { UpdateRankingsUseCase } from '../ranking/ranking.usecase';
 
 @Injectable()
 export class CreateFightUseCase {
@@ -143,6 +144,8 @@ export class RecordFightResultUseCase {
 
     @InjectRepository(FighterEntity)
     private readonly fighterRepo: Repository<FighterEntity>,
+
+    private readonly updateRankingsUseCase: UpdateRankingsUseCase,
   ) {}
 
   async execute(input: RecordFightResultInput): Promise<FightEntity> {
@@ -223,6 +226,11 @@ export class RecordFightResultUseCase {
       where: { id: fight.id },
       relations: ['participants', 'participants.fighter'],
     });
+
+    // Update rankings asynchronously
+    setTimeout(() => {
+      this.updateRankingsUseCase.executeForWeightClass(fighterA.weightClass);
+    }, 0);
 
     if (!updatedFight) {
       throw new NotFoundException(

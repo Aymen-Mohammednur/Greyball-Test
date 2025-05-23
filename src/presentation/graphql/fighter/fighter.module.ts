@@ -9,6 +9,7 @@ import {
   DeleteFighter,
   UpdateFighter,
 } from '../../../application/fighter/fighter.usecase';
+import { GetTopRankedFightersUseCase } from 'src/application/ranking/ranking.usecase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([FighterEntity])],
@@ -19,6 +20,7 @@ import {
     GetFighterById,
     DeleteFighter,
     UpdateFighter,
+    GetTopRankedFightersUseCase
   ],
 })
 export class FighterModule {}

@@ -15,6 +15,8 @@ type FighterEntity {
   draws: Int!
   knockouts: Int!
   submissions: Int!
+  rankingPoints: Float
+  rank: Float
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -54,6 +56,7 @@ type EventEntity {
 type Query {
   getAllFighters: [FighterEntity!]!
   getFighterById(id: String!): FighterEntity
+  getTopRankedFighters(weightClass: String!, limit: Float): [FighterEntity!]!
   getAllEvents: [EventEntity!]!
   getEventById(id: String!): EventEntity
   getAllFights: [FightEntity!]!

@@ -58,6 +58,14 @@ export class FighterEntity {
   @Column({ default: 0 })
   submissions: number;
 
+  @Field(() => Number, { nullable: true })
+  @Column({ nullable: true })
+  rankingPoints?: number;
+
+  @Field(() => Number, { nullable: true })
+  @Column({ nullable: true })
+  rank?: number;
+
   @Field()
   @CreateDateColumn()
   createdAt: Date;

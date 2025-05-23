@@ -12,6 +12,7 @@ import {
 } from 'src/application/fight/fight.usecase';
 import { FightResolver } from './fight.resolver';
 import { FighterEntity } from 'src/infrastructure/database/fighter.entity';
+import { UpdateRankingsUseCase } from 'src/application/ranking/ranking.usecase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([FightEntity, FightParticipantEntity, FighterEntity])],
@@ -22,7 +23,8 @@ import { FighterEntity } from 'src/infrastructure/database/fighter.entity';
     GetFightByIdUseCase,
     UpdateFightUseCase,
     DeleteFightUseCase,
-    RecordFightResultUseCase
+    RecordFightResultUseCase,
+    UpdateRankingsUseCase,
   ],
 })
 export class FightModule {}
