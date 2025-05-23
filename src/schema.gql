@@ -24,15 +24,27 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type EventEntity {
+  id: ID!
+  name: String!
+  location: String!
+  eventDate: DateTime!
+}
+
 type Query {
   getAllFighters: [FighterEntity!]!
   getFighterById(id: String!): FighterEntity
+  getAllEvents: [EventEntity!]!
+  getEventById(id: String!): EventEntity
 }
 
 type Mutation {
   createFighter(input: CreateFighterInput!): FighterEntity!
   updateFighter(id: String!, input: UpdateFighterInput!): FighterEntity!
   deleteFighter(id: String!): Boolean!
+  createEvent(input: CreateEventInput!): EventEntity!
+  updateEvent(id: String!, input: UpdateEventInput!): EventEntity!
+  deleteEvent(id: String!): Boolean!
 }
 
 input CreateFighterInput {
@@ -59,4 +71,16 @@ input UpdateFighterInput {
   draws: Int
   knockouts: Int
   submissions: Int
+}
+
+input CreateEventInput {
+  name: String!
+  location: String!
+  eventDate: String!
+}
+
+input UpdateEventInput {
+  name: String
+  location: String
+  eventDate: String
 }

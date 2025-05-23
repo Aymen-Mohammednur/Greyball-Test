@@ -7,6 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { FighterModule } from './presentation/graphql/fighter/fighter.module';
 import { FighterEntity } from './infrastructure/database/entities/fighter.entity';
+import { EventModule } from './presentation/graphql/event/event.module';
+import { EventEntity } from './infrastructure/database/entities/event.entity';
 
 @Module({
   imports: [
@@ -37,12 +39,13 @@ import { FighterEntity } from './infrastructure/database/entities/fighter.entity
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [FighterEntity],
+        entities: [FighterEntity, EventEntity],
         synchronize: configService.get<boolean>('TYPEORM_SYNC'),
         logging: true,
       }),
     }),
     FighterModule,
+    EventModule,
   ],
   controllers: [],
   providers: [],

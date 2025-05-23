@@ -57,7 +57,7 @@ export class UpdateEventUseCase {
 
     const patch = {
       ...data,
-      dateOfBirth: data.eventDate ? new Date(data.eventDate) : undefined,
+      eventDate: data.eventDate ? new Date(data.eventDate) : undefined,
     };
 
     const input = removeUndefinedKeys(patch);
