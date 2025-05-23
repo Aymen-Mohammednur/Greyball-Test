@@ -6,9 +6,12 @@ import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { FighterModule } from './presentation/graphql/fighter/fighter.module';
-import { FighterEntity } from './infrastructure/database/entities/fighter.entity';
+import { FighterEntity } from './infrastructure/database/fighter.entity';
 import { EventModule } from './presentation/graphql/event/event.module';
-import { EventEntity } from './infrastructure/database/entities/event.entity';
+import { EventEntity } from './infrastructure/database/event.entity';
+import { FightModule } from './presentation/graphql/fight/fight.module';
+import { FightEntity } from './infrastructure/database/fight.entity';
+import { FightParticipantEntity } from './infrastructure/database/fight-participant.entity';
 
 @Module({
   imports: [
@@ -39,13 +42,14 @@ import { EventEntity } from './infrastructure/database/entities/event.entity';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [FighterEntity, EventEntity],
+        entities: [FighterEntity, EventEntity, FightEntity, FightParticipantEntity],
         synchronize: configService.get<boolean>('TYPEORM_SYNC'),
-        logging: true,
+        logging: false,
       }),
     }),
     FighterModule,
     EventModule,
+    FightModule,
   ],
   controllers: [],
   providers: [],

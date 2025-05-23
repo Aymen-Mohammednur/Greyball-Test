@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { FighterEntity } from '../../../infrastructure/database/entities/fighter.entity';
+import { FighterEntity } from '../../../infrastructure/database/fighter.entity';
 import { FighterResolver } from './fighter.resolver';
 import {
   CreateFighter,

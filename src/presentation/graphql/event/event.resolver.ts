@@ -1,5 +1,12 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { EventEntity } from '../../../infrastructure/database/entities/event.entity';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Parent,
+  ResolveField,
+} from '@nestjs/graphql';
+import { EventEntity } from '../../../infrastructure/database/event.entity';
 import {
   CreateEventUseCase,
   GetAllEventsUseCase,
@@ -12,6 +19,9 @@ import {
   UpdateEventInput,
 } from 'src/presentation/graphql/event/event.input';
 import { ParseUUIDPipe } from '@nestjs/common';
+import { FightEntity } from 'src/infrastructure/database/fight.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Resolver(() => EventEntity)
 export class EventResolver {
@@ -21,6 +31,9 @@ export class EventResolver {
     private readonly getEventByIdUseCase: GetEventByIdUseCase,
     private readonly updateEventUseCase: UpdateEventUseCase,
     private readonly deleteEventUseCase: DeleteEventUseCase,
+
+    @InjectRepository(FightEntity)
+    private readonly fightRepo: Repository<FightEntity>,
   ) {}
 
   @Query(() => [EventEntity])
@@ -53,5 +66,12 @@ export class EventResolver {
     @Args('id', { type: () => String }, ParseUUIDPipe) id: string,
   ) {
     return this.deleteEventUseCase.execute(id);
+  }
+
+  @ResolveField(() => [FightEntity])
+  async fights(@Parent() event: EventEntity): Promise<FightEntity[]> {
+    return this.fightRepo.find({
+      where: { eventId: event.id },
+    });
   }
 }

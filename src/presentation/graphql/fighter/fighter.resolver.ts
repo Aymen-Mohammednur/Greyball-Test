@@ -1,5 +1,5 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { FighterEntity } from '../../../infrastructure/database/entities/fighter.entity';
+import { FighterEntity } from '../../../infrastructure/database/fighter.entity';
 import {
   CreateFighter,
   GetAllFighters,

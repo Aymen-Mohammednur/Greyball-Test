@@ -24,11 +24,31 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type FightParticipantEntity {
+  id: ID!
+  fight: FightEntity!
+  fighter: FighterEntity!
+  corner: String!
+  isWinner: Boolean
+}
+
+type FightEntity {
+  id: ID!
+  event: EventEntity!
+  roundCount: Float!
+  method: String
+  resultSummary: String
+  winner: FighterEntity
+  completed: Boolean!
+  participants: [FightParticipantEntity!]
+}
+
 type EventEntity {
   id: ID!
   name: String!
   location: String!
   eventDate: DateTime!
+  fights: [FightEntity!]
 }
 
 type Query {
@@ -36,6 +56,8 @@ type Query {
   getFighterById(id: String!): FighterEntity
   getAllEvents: [EventEntity!]!
   getEventById(id: String!): EventEntity
+  getAllFights: [FightEntity!]!
+  getFightById(id: String!): FightEntity!
 }
 
 type Mutation {
@@ -45,6 +67,10 @@ type Mutation {
   createEvent(input: CreateEventInput!): EventEntity!
   updateEvent(id: String!, input: UpdateEventInput!): EventEntity!
   deleteEvent(id: String!): Boolean!
+  createFight(input: CreateFightInput!): FightEntity!
+  updateFight(id: String!, input: UpdateFightInput!): FightEntity!
+  deleteFight(id: String!): Boolean!
+  recordFightResult(input: RecordFightResultInput!): FightEntity!
 }
 
 input CreateFighterInput {
@@ -83,4 +109,25 @@ input UpdateEventInput {
   name: String
   location: String
   eventDate: String
+}
+
+input CreateFightInput {
+  eventId: String!
+  redFighterId: String!
+  blueFighterId: String!
+  roundCount: Float!
+}
+
+input UpdateFightInput {
+  roundCount: Int
+  method: String
+  resultSummary: String
+  completed: Boolean
+}
+
+input RecordFightResultInput {
+  fightId: String!
+  winnerId: String
+  method: String!
+  resultSummary: String
 }
