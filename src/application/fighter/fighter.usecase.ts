@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -35,9 +36,15 @@ export class CreateFighter {
       );
     }
 
+    const dateOfBirth = new Date(input.dateOfBirth);
+    const now = new Date();
+    if (dateOfBirth > now) {
+      throw new BadRequestException('Date of birth cannot be in the future.');
+    }
+
     const fighter = this.fighterRepo.create({
       ...input,
-      dateOfBirth: new Date(input.dateOfBirth),
+      dateOfBirth,
     });
 
     return this.fighterRepo.save(fighter);
@@ -79,6 +86,15 @@ export class UpdateFighter {
     const fighter = await this.fighterRepo.findOneBy({ id });
     if (!fighter) {
       throw new NotFoundException(`Fighter with ID ${id} not found`);
+    }
+
+    // Validate dateOfBirth if provided
+    if (data.dateOfBirth) {
+      const dateOfBirth = new Date(data.dateOfBirth);
+      const now = new Date();
+      if (dateOfBirth > now) {
+        throw new BadRequestException('Date of birth cannot be in the future.');
+      }
     }
 
     const patch = {

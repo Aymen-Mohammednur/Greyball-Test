@@ -16,6 +16,7 @@ import { FightParticipantEntity } from '../../infrastructure/database/fight-part
 import { removeUndefinedKeys } from '../../shared/utils';
 import { FighterEntity } from 'src/infrastructure/database/fighter.entity';
 import { UpdateRankingsUseCase } from '../ranking/ranking.usecase';
+import { EventEntity } from 'src/infrastructure/database/event.entity';
 
 @Injectable()
 export class CreateFightUseCase {
@@ -23,17 +24,53 @@ export class CreateFightUseCase {
     @InjectRepository(FightEntity)
     private readonly fightRepo: Repository<FightEntity>,
 
+    @InjectRepository(EventEntity)
+    private readonly eventRepo: Repository<EventEntity>,
+
+    @InjectRepository(FighterEntity)
+    private readonly fighterRepo: Repository<FighterEntity>,
+
     @InjectRepository(FightParticipantEntity)
     private readonly participantRepo: Repository<FightParticipantEntity>,
   ) {}
 
   async execute(input: CreateFightInput): Promise<FightEntity> {
+    const event = await this.eventRepo.findOne({
+      where: { id: input.eventId },
+    });
+
+    if (!event) {
+      throw new NotFoundException(
+        `Event with ID ${input.eventId} not found.`,
+      );
+    }
+
     const fight = this.fightRepo.create({
       eventId: input.eventId,
       roundCount: input.roundCount,
     });
 
     const savedFight = await this.fightRepo.save(fight);
+
+    const fighterA = await this.fighterRepo.findOne({
+      where: { id: input.redFighterId },
+    });
+
+    if (!fighterA) {
+      throw new NotFoundException(
+        `Fighter(red corner) with ID ${input.redFighterId} not found.`,
+      );
+    }
+
+    const fighterB = await this.fighterRepo.findOne({
+      where: { id: input.blueFighterId },
+    });
+
+    if (!fighterB) {
+      throw new NotFoundException(
+        `Fighter(blue corner) with ID ${input.blueFighterId} not found.`,
+      );
+    }
 
     const redParticipant = this.participantRepo.create({
       fightId: savedFight.id,

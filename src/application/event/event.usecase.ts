@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MoreThan, Repository } from 'typeorm';
 import { EventEntity } from '../../infrastructure/database/event.entity';
@@ -15,9 +15,14 @@ export class CreateEventUseCase {
   ) {}
 
   async execute(input: CreateEventInput): Promise<EventEntity> {
+    const eventDate = new Date(input.eventDate);
+    const now = new Date();
+    if (eventDate < now) {
+      throw new BadRequestException('Event date cannot be in the past.');
+    }
     const event = this.repo.create({
       ...input,
-      eventDate: new Date(input.eventDate),
+      eventDate,
     });
     return this.repo.save(event);
   }

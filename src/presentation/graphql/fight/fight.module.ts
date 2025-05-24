@@ -8,14 +8,22 @@ import {
   GetFightByIdUseCase,
   UpdateFightUseCase,
   DeleteFightUseCase,
-  RecordFightResultUseCase
+  RecordFightResultUseCase,
 } from 'src/application/fight/fight.usecase';
 import { FightResolver } from './fight.resolver';
 import { FighterEntity } from 'src/infrastructure/database/fighter.entity';
 import { UpdateRankingsUseCase } from 'src/application/ranking/ranking.usecase';
+import { EventEntity } from 'src/infrastructure/database/event.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([FightEntity, FightParticipantEntity, FighterEntity])],
+  imports: [
+    TypeOrmModule.forFeature([
+      FightEntity,
+      FightParticipantEntity,
+      FighterEntity,
+      EventEntity,
+    ]),
+  ],
   providers: [
     FightResolver,
     CreateFightUseCase,
