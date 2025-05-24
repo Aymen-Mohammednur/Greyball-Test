@@ -8,6 +8,7 @@ import {
   GetFighterById,
   DeleteFighter,
   UpdateFighter,
+  GetFighterProfileUseCase,
 } from '../../../application/fighter/fighter.usecase';
 import { GetTopRankedFightersUseCase } from 'src/application/ranking/ranking.usecase';
 
@@ -20,7 +21,8 @@ import { GetTopRankedFightersUseCase } from 'src/application/ranking/ranking.use
     GetFighterById,
     DeleteFighter,
     UpdateFighter,
-    GetTopRankedFightersUseCase
+    GetTopRankedFightersUseCase,
+    GetFighterProfileUseCase
   ],
 })
 export class FighterModule {}

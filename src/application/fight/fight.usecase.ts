@@ -155,6 +155,14 @@ export class RecordFightResultUseCase {
       throw new NotFoundException(`Fight with ID ${input.fightId} not found`);
     }
 
+    const fighter = await this.fighterRepo.findOneBy({ id: input.winnerId });
+
+    if (!fighter) {
+      throw new NotFoundException(
+        `Fighter with ID ${input.winnerId} not found`,
+      );
+    }
+
     // Prevent duplicate submissions
     if (fight.completed) {
       throw new BadRequestException(`Fight result has already been recorded`);
@@ -205,11 +213,12 @@ export class RecordFightResultUseCase {
       winner.wins = (winner.wins ?? 0) + 1;
       loser.losses = (loser.losses ?? 0) + 1;
 
-      if (
-        input.method.toLowerCase() === 'ko' ||
-        input.method.toLowerCase() === 'tko'
-      ) {
+      if (input.method.toLowerCase() === 'ko') {
         winner.knockouts = (winner.knockouts ?? 0) + 1;
+      }
+
+      if (input.method.toLowerCase() === 'decision') {
+        winner.decisions = (winner.decisions ?? 0) + 1;
       }
 
       if (input.method.toLowerCase() === 'submission') {
@@ -219,6 +228,10 @@ export class RecordFightResultUseCase {
       fighterA.draws = (fighterA.draws ?? 0) + 1;
       fighterB.draws = (fighterB.draws ?? 0) + 1;
     }
+
+    const now = new Date();
+    fighterA.lastFightDate = now;
+    fighterB.lastFightDate = now;
 
     await this.fighterRepo.save([fighterA, fighterB]);
 

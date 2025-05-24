@@ -13,6 +13,7 @@ import {
   GetEventByIdUseCase,
   UpdateEventUseCase,
   DeleteEventUseCase,
+  GetUpcomingEventsUseCase
 } from '../../../application/event/event.usecase';
 import {
   CreateEventInput,
@@ -31,6 +32,7 @@ export class EventResolver {
     private readonly getEventByIdUseCase: GetEventByIdUseCase,
     private readonly updateEventUseCase: UpdateEventUseCase,
     private readonly deleteEventUseCase: DeleteEventUseCase,
+    private readonly getUpcomingEventsUseCase: GetUpcomingEventsUseCase,
 
     @InjectRepository(FightEntity)
     private readonly fightRepo: Repository<FightEntity>,
@@ -73,5 +75,10 @@ export class EventResolver {
     return this.fightRepo.find({
       where: { eventId: event.id },
     });
+  }
+
+  @Query(() => [EventEntity])
+  async getUpcomingEvents(): Promise<EventEntity[]> {
+    return this.getUpcomingEventsUseCase.execute();
   }
 }

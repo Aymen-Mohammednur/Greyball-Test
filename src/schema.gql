@@ -2,6 +2,39 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type EventEntity {
+  id: ID!
+  name: String!
+  location: String!
+  eventDate: DateTime!
+  fights: [FightEntity!]
+  fightCount: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type FightEntity {
+  id: ID!
+  event: EventEntity!
+  roundCount: Float!
+  method: String
+  resultSummary: String
+  winner: FighterEntity
+  completed: Boolean!
+  participants: [FightParticipantEntity!]
+}
+
+type FightParticipantEntity {
+  id: ID!
+  fight: FightEntity!
+  fighter: FighterEntity!
+  corner: String!
+  isWinner: Boolean
+}
+
 type FighterEntity {
   id: ID!
   firstName: String!
@@ -15,50 +48,46 @@ type FighterEntity {
   draws: Int!
   knockouts: Int!
   submissions: Int!
-  rankingPoints: Float
-  rank: Float
+  decisions: Int!
+  rankingPoints: Float!
+  rank: Int!
+  lastFightDate: DateTime
+  fightParticipants: [FightParticipantEntity!]
   createdAt: DateTime!
   updatedAt: DateTime!
+  winPercentage: Float
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type FightParticipantEntity {
-  id: ID!
-  fight: FightEntity!
-  fighter: FighterEntity!
-  corner: String!
-  isWinner: Boolean
+type FightSummaryOutput {
+  fightId: ID!
+  result: String!
+  method: String!
+  isWinner: Boolean!
+  fightDate: DateTime!
+  opponent: FighterEntity!
 }
 
-type FightEntity {
+type FighterProfileOutput {
   id: ID!
-  event: EventEntity!
-  roundCount: Float!
-  method: String
-  resultSummary: String
-  winner: FighterEntity
-  completed: Boolean!
-  participants: [FightParticipantEntity!]
-}
-
-type EventEntity {
-  id: ID!
-  name: String!
-  location: String!
-  eventDate: DateTime!
-  fights: [FightEntity!]
+  nickname: String!
+  weightClass: String!
+  winPercentage: Float!
+  wins: Float!
+  losses: Float!
+  draws: Float!
+  rank: Float
+  rankingPoints: Float
+  fightHistory: [FightSummaryOutput!]!
 }
 
 type Query {
   getAllFighters: [FighterEntity!]!
   getFighterById(id: String!): FighterEntity
   getTopRankedFighters(weightClass: String!, limit: Float): [FighterEntity!]!
+  getFighterProfile(id: String!): FighterProfileOutput!
   getAllEvents: [EventEntity!]!
   getEventById(id: String!): EventEntity
+  getUpcomingEvents: [EventEntity!]!
   getAllFights: [FightEntity!]!
   getFightById(id: String!): FightEntity!
 }

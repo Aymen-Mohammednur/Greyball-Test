@@ -5,7 +5,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { FightEntity } from './fight.entity';
+import { FightParticipantEntity } from './fight-participant.entity';
 
 @Entity('fighters')
 @ObjectType()
@@ -58,13 +61,25 @@ export class FighterEntity {
   @Column({ default: 0 })
   submissions: number;
 
-  @Field(() => Number, { nullable: true })
-  @Column({ nullable: true })
-  rankingPoints?: number;
+  @Field(() => Int)
+  @Column({ default: 0 })
+  decisions: number;
 
-  @Field(() => Number, { nullable: true })
-  @Column({ nullable: true })
-  rank?: number;
+  @Field(() => Number)
+  @Column({ default: 0 })
+  rankingPoints: number;
+
+  @Field(() => Int)
+  @Column({ default: 0 })
+  rank: number;
+
+  @Field({ nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
+  lastFightDate?: Date;
+
+  @OneToMany(() => FightParticipantEntity, (participant) => participant.fighter)
+  @Field(() => [FightParticipantEntity], { nullable: true })
+  fightParticipants?: FightParticipantEntity[];
 
   @Field()
   @CreateDateColumn()
@@ -73,4 +88,8 @@ export class FighterEntity {
   @Field()
   @UpdateDateColumn()
   updatedAt: Date;
+
+  // not stored in the DB, but resolved dynamically
+  @Field(() => Number, { nullable: true })
+  winPercentage?: number;
 }

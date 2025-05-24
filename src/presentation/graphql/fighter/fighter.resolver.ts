@@ -6,10 +6,12 @@ import {
   GetFighterById,
   DeleteFighter,
   UpdateFighter,
+  GetFighterProfileUseCase,
 } from '../../../application/fighter/fighter.usecase';
 import { CreateFighterInput, UpdateFighterInput } from './fighter.input';
 import { ParseUUIDPipe } from '@nestjs/common';
 import { GetTopRankedFightersUseCase } from 'src/application/ranking/ranking.usecase';
+import { FighterProfileOutput } from './fighter.output';
 
 @Resolver(() => FighterEntity)
 export class FighterResolver {
@@ -20,6 +22,7 @@ export class FighterResolver {
     private readonly updateFighterUseCase: UpdateFighter,
     private readonly deleteFighterUseCase: DeleteFighter,
     private readonly getTopRankedFightersUseCase: GetTopRankedFightersUseCase,
+    private readonly getFighterProfileUseCase: GetFighterProfileUseCase,
   ) {}
 
   @Query(() => [FighterEntity])
@@ -60,5 +63,12 @@ export class FighterResolver {
     @Args('limit', { type: () => Number, nullable: true }) limit = 10,
   ) {
     return this.getTopRankedFightersUseCase.execute(weightClass, limit);
+  }
+
+  @Query(() => FighterProfileOutput)
+  async getFighterProfile(
+    @Args('id') id: string,
+  ): Promise<FighterProfileOutput> {
+    return this.getFighterProfileUseCase.execute(id);
   }
 }

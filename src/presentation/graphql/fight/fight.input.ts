@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsString,
   MaxLength,
+  IsIn,
 } from 'class-validator';
 
 @InputType()
@@ -40,6 +41,9 @@ export class UpdateFightInput {
   @IsOptional()
   @IsString()
   @MaxLength(100)
+  @IsIn(['ko', 'submission', 'decision'], {
+    message: 'Method must be one of: ko, submission, or decision',
+  })
   method?: string; // e.g. KO, Submission
 
   @Field({ nullable: true })
@@ -66,6 +70,9 @@ export class RecordFightResultInput {
 
   @Field()
   @IsString()
+  @IsIn(['ko', 'submission', 'decision'], {
+    message: 'Method must be one of: ko, submission, or decision',
+  })
   method: string; // KO, Decision, Submission, etc.
 
   @Field({ nullable: true })

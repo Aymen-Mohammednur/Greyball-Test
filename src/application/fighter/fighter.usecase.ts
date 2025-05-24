@@ -11,6 +11,11 @@ import {
   UpdateFighterInput,
 } from 'src/presentation/graphql/fighter/fighter.input';
 import { removeUndefinedKeys } from 'src/shared/utils';
+import { RankingCalculator } from 'src/domain/services/ranking-calculator';
+import {
+  FighterProfileOutput,
+  FightSummaryOutput,
+} from 'src/presentation/graphql/fighter/fighter.output';
 
 @Injectable()
 export class CreateFighter {
@@ -111,5 +116,67 @@ export class DeleteFighter {
   async execute(id: string): Promise<boolean> {
     const result = await this.fighterRepo.delete(id);
     return !!result.affected && result.affected > 0;
+  }
+}
+
+@Injectable()
+export class GetFighterProfileUseCase {
+  constructor(
+    @InjectRepository(FighterEntity)
+    private readonly fighterRepo: Repository<FighterEntity>,
+  ) {}
+
+  async execute(id: string): Promise<FighterProfileOutput> {
+    const fighter = await this.fighterRepo.findOne({
+      where: { id },
+      relations: [
+        'fightParticipants',
+        'fightParticipants.fight',
+        'fightParticipants.fight.participants',
+      ],
+    });
+
+    if (!fighter)
+      throw new NotFoundException(`Fighter with ID ${id} not found`);
+
+    const winPercentage = RankingCalculator.getWinPercentage(fighter);
+
+    const fightHistory: FightSummaryOutput[] = [];
+
+    for (const myParticipant of fighter.fightParticipants ?? []) {
+      const fight = myParticipant.fight;
+      const opponentParticipant = fight.participants.find(
+        (p) => p.fighter.id !== fighter.id,
+      );
+
+      if (!opponentParticipant) continue;
+
+      fightHistory.push({
+        fightId: fight.id,
+        method: fight.method ?? 'N/A',
+        result:
+          myParticipant.isWinner === true
+            ? 'win'
+            : myParticipant.isWinner === false
+              ? 'loss'
+              : 'draw',
+        isWinner: myParticipant.isWinner ?? false,
+        fightDate: fight.event?.eventDate ?? new Date(),
+        opponent: opponentParticipant.fighter,
+      });
+    }
+
+    return {
+      id: fighter.id,
+      nickname: fighter.nickname,
+      weightClass: fighter.weightClass,
+      winPercentage,
+      wins: fighter.wins ?? 0,
+      losses: fighter.losses ?? 0,
+      draws: fighter.draws ?? 0,
+      rank: fighter.rank,
+      rankingPoints: fighter.rankingPoints,
+      fightHistory,
+    };
   }
 }

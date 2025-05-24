@@ -7,6 +7,7 @@ import {
   GetEventByIdUseCase,
   UpdateEventUseCase,
   DeleteEventUseCase,
+  GetUpcomingEventsUseCase,
 } from '../../../application/event/event.usecase';
 import { EventResolver } from './event.resolver';
 import { FightEntity } from 'src/infrastructure/database/fight.entity';
@@ -20,6 +21,7 @@ import { FightEntity } from 'src/infrastructure/database/fight.entity';
     GetEventByIdUseCase,
     UpdateEventUseCase,
     DeleteEventUseCase,
+    GetUpcomingEventsUseCase,
   ],
 })
 export class EventModule {}

@@ -23,5 +23,10 @@ export class EventEntity {
 
   @Field(() => [FightEntity], { nullable: true })
   @OneToMany(() => FightEntity, (fight) => fight.event)
-  fights: FightEntity[];
+  fights?: FightEntity[];
+
+  @Field(() => Number)
+  get fightCount(): number {
+    return this.fights?.length ?? 0;
+  }
 }
