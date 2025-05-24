@@ -1,98 +1,250 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# GreyBall Test - MMA Fighter and Event Management Platform
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A full-featured backend system for managing mixed martial arts (MMA) fighters, events, statistics, rankings, and fight cards. Done as part of vetting process for Greyball.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Built using **NestJS**, **GraphQL**, **TypeORM**, and **PostgreSQL**, adhering to **CLEAN Architecture** principles.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features
 
-## Project setup
+### Fighter Management
+- Create, update, delete fighters
+- Personal details: name, nickname, weight class, height, nationality, date of birth, etc...
+- Real-time ranking and statistics tracking
+- Fight history with outcomes, methods, and opponents
 
-```bash
-$ npm install
+### Fight Management
+- Create fights under an event
+- Assign fighters, winner, method (KO, Submission, Decision)
+- Automatically update fighter stats
+
+### Event Management
+- Schedule events with location and date
+- Manage fight cards (fights + participants)
+- Query upcoming events with full card listings
+
+### Rankings System
+- Points-based ranking plus activity multiplier (see below for details)
+- Rankings auto-update after every recorded result
+
+---
+
+## Architecture
+
+This project follows **CLEAN Architecture**:
+
 ```
 
-## Compile and run the project
+src/
+├── domain/               # Core business logic (e.g. ranking service)
+├── application/          # Use-cases (create/update/query logic)
+├── infrastructure/       # DB entities and TypeORM implementations
+├── presentation/         # GraphQL resolvers, DTOs, validation
+
+````
+
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v18+)
+- PostgreSQL
+- npm or yarn
+
+### Install dependencies
 
 ```bash
-# development
-$ npm run start
+npm install
+````
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
+### Configure environment
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+cp .env.example .env
+# Then edit .env with DB credentials
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Start the dev server
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## GraphQL API Usage
 
-Check out a few resources that may come in handy when working with NestJS:
+Visit GraphQL Apollo Server: `http://localhost:3000/graphql`
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+---
 
-## Support
+### Create a Fighter
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```graphql
+mutation {
+  createFighter(input: {
+    firstName: "Jon"
+    lastName: "Jones"
+    nickname: "Bones"
+    weightClass: "Heavyweight"
+    dateOfBirth: "1987-07-19"
+    gender: "male"
+    heightCm: 193
+    nationality: "USA"
+  }) {
+    id
+    nickname
+  }
+}
+```
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Get Fighter Profile (Stats + History)
 
-## License
+```graphql
+query {
+  getFighterProfile(id: "fighter-uuid") {
+    nickname
+    rank
+    rankingPoints
+    winPercentage
+    fightHistory {
+      fightId
+      opponent {
+        nickname
+      }
+      method
+      result
+      fightDate
+    }
+  }
+}
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+### Record Fight Result
+
+```graphql
+mutation {
+  recordFightResult(input: {
+    fightId: "fight-uuid"
+    winnerId: "fighter-uuid"
+    method: "ko"
+    resultSummary: "Left hook KO in round 7"
+  }) {
+    id
+    roundCount
+    completed
+    winner {
+      firstName
+      lastName
+      nickname
+    }
+  }
+}
+```
+
+---
+
+### Get Upcoming Events + Fight Cards
+
+```graphql
+query {
+  getUpcomingEvents {
+    name
+    eventDate
+    fightCount
+    fights {
+      participants {
+        corner
+        fighter {
+          nickname
+          weightClass
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### Get Top Ranked Fighters
+
+```graphql
+query {
+  getTopRankedFighters(weightClass: "Lightweight", limit: 5) {
+    nickname
+    rank
+    rankingPoints
+  }
+}
+```
+
+---
+### Rest of the APIs in the system
+
+| API Name               | Function                                                     |
+| ---------------------- | ------------------------------------------------------------ |
+| `createFighter`        | Create a new fighter profile                                 |
+| `updateFighter`        | Update an existing fighter                                   |
+| `deleteFighter`        | Delete a fighter                                        |
+| `getFighterProfile`    | Retrieve fighter statistics and full fight history           |
+| `getTopRankedFighters` | Get top fighters in a weight class based on dynamic rankings |
+| `createEvent`          | Create a new event                                           |
+| `updateEvent`          | Update event details (date, location, name)                  |
+| `deleteEvent`          | Delete an event                                              |
+| `getAllEvents`         | List all events (past and future)                            |
+| `getUpcomingEvents`    | List only future events with their fight cards               |
+| `createFight`          | Create a fight and assign participants                       |
+| `updateFight`          | Update fight method/result summary before completion         |
+| `deleteFight`          | Delete a fight                                               |
+| `getAllFights`         | Retrieve all fights in the system                            |
+| `getFightById`         | Retrieve a single fight with participants                    |
+| `recordFightResult`    | Record outcome of a fight and trigger ranking update         |
+
+
+---
+
+## Ranking Algorithm Explained
+
+Fighter rankings are computed using a point-based performance model with an activity multiplier. This allows the system to reflect both skill and recency of performance, rewarding fighters who win impressively and stay active.
+
+### Base Points
+Each fighter earns a base score depending on the outcome of their recorded fights. These are accumulated across all fights. This rewards not only winning, but how they win.
+
+
+
+| Result Type       | Points |
+| ----------------- | ------ |
+| KO/Submission Win | 5      |
+| Decision Win      | 3      |
+| Draw              | 1      |
+| Loss              | 0      |
+
+### Activity Multiplier
+To encourage consistent competition and prevent rank inflation by inactivity, each fighter’s base score is multiplied by an activity factor derived from their last fight date. This ensures fighters who win but stop competing get demoted gradually and fighters who stay active climb the rankings fast.
+
+| Days Since Last Fight | Multiplier |
+| --------------------- | ---------- |
+| 0–30 days             | ×1.2       |
+| 31–90 days            | ×1.0       |
+| 91–180 days           | ×0.8       |
+| 180+ days             | ×0.5       |
+
+This ensures our ranking system is robust and tie's don't happen often.
+
+### Tiebreaker Logic
+
+If still multiple fighters have the same score, their rank is determined by their `win percentage`. On the very rare occasion that even after their win percentage the fighters are tied then nicknames are used as a final fallback to guarantee deterministic ranking.
+
+---
+
+* The SQL scripts to create the tables can be found in the root directory under the name `schema.sql` or you can click [here](https://github.com/Aymen-Mohammednur/greyball-test/schema.sql).
+* The `ER Diagram` to view the relationships between the entities in the database can be found in the root directory under the name `ER Diagram.pdf` or you can click [here](https://lucid.app/lucidchart/f474a44b-43f1-4417-a1c5-b741e4788732/view).
+
+**Made with ❤️ by Aymen**
