@@ -26,7 +26,7 @@ Built using **NestJS**, **GraphQL**, **TypeORM**, and **PostgreSQL**, adhering t
 
 ### Rankings System
 - Points-based ranking plus activity multiplier (see below for details)
-- Rankings auto-update after every recorded result
+- Rankings auto-update using a background cron job
 
 ---
 
@@ -192,9 +192,10 @@ query {
 | ---------------------- | ------------------------------------------------------------ |
 | `createFighter`        | Create a new fighter profile                                 |
 | `updateFighter`        | Update an existing fighter                                   |
-| `deleteFighter`        | Delete a fighter                                        |
+| `deleteFighter`        | Delete a fighter                                             |
 | `getFighterProfile`    | Retrieve fighter statistics and full fight history           |
 | `getTopRankedFighters` | Get top fighters in a weight class based on dynamic rankings |
+| `triggerRankingUpdate` | Manually trigger full fighter rankings recalculation         |
 | `createEvent`          | Create a new event                                           |
 | `updateEvent`          | Update event details (date, location, name)                  |
 | `deleteEvent`          | Delete an event                                              |
@@ -241,6 +242,15 @@ This ensures our ranking system is robust and tie's don't happen often.
 ### Tiebreaker Logic
 
 If still multiple fighters have the same score, their rank is determined by their `win percentage`. On the very rare occasion that even after their win percentage the fighters are tied then nicknames are used as a final fallback to guarantee deterministic ranking.
+
+---
+
+## Background Jobs
+
+The system automatically recalculates fighter rankings every hour using a background cron job. Ensures fighters are ranked consistently over time, even if no recent rankings were made manually.
+
+- **Job:** `@Cron(EVERY_HOUR)`
+- **Fallback:** A manual mutation `triggerRankingUpdate()` is available for instant recalculation
 
 ---
 
