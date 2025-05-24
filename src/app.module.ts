@@ -2,8 +2,9 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import * as Joi from 'joi';
+import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import * as Joi from 'joi';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { FighterModule } from './presentation/graphql/fighter/fighter.module';
 import { FighterEntity } from './infrastructure/database/fighter.entity';
@@ -12,6 +13,7 @@ import { EventEntity } from './infrastructure/database/event.entity';
 import { FightModule } from './presentation/graphql/fight/fight.module';
 import { FightEntity } from './infrastructure/database/fight.entity';
 import { FightParticipantEntity } from './infrastructure/database/fight-participant.entity';
+import { SchedulerModule } from './presentation/graphql/ranking/ranking.module';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { FightParticipantEntity } from './infrastructure/database/fight-particip
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
@@ -50,6 +53,7 @@ import { FightParticipantEntity } from './infrastructure/database/fight-particip
     FighterModule,
     EventModule,
     FightModule,
+    SchedulerModule
   ],
   controllers: [],
   providers: [],

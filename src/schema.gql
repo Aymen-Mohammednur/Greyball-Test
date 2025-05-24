@@ -103,6 +103,7 @@ type Mutation {
   updateFight(id: String!, input: UpdateFightInput!): FightEntity!
   deleteFight(id: String!): Boolean!
   recordFightResult(input: RecordFightResultInput!): FightEntity!
+  triggerRankingUpdate: Boolean!
 }
 
 input CreateFighterInput {

@@ -54,3 +54,25 @@ export class GetTopRankedFightersUseCase {
     });
   }
 }
+
+@Injectable()
+export class UpdateAllRankingsUseCase {
+  constructor(
+    @InjectRepository(FighterEntity)
+    private readonly fighterRepo: Repository<FighterEntity>,
+    private readonly updateRankingsUseCase: UpdateRankingsUseCase,
+  ) {}
+
+  async execute(): Promise<boolean> {
+    const weightClasses = await this.fighterRepo
+      .createQueryBuilder('f')
+      .select('DISTINCT f.weightClass', 'weightClass')
+      .getRawMany();
+
+    for (const { weightClass } of weightClasses) {
+      await this.updateRankingsUseCase.executeForWeightClass(weightClass);
+    }
+
+    return true;
+  }
+}

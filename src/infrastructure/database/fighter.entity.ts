@@ -66,7 +66,7 @@ export class FighterEntity {
   decisions: number;
 
   @Field(() => Number)
-  @Column({ default: 0 })
+  @Column({ type: 'float', nullable: true })
   rankingPoints: number;
 
   @Field(() => Int)
